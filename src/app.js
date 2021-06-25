@@ -2,7 +2,7 @@ const express = require("express");
 const request = require("./request.js");
 const schedule = require("node-schedule");
 const db = require("./db.js");
-const CryptoJS = require("crypto-js");
+const Bot = require("./bot");
 
 const app = express();
 const port = 3000;
@@ -11,30 +11,16 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-const url =
-  "https://open.feishu.cn/open-apis/bot/v2/hook/xxxxxx";
-// const url = "http://localhost:3002/test";
-const key = "xxxxxxx";
-// 发送飞书通知
-const sendFs = (text) => {
-  const timestamp = parseInt(new Date().getTime() / 1000);
-  const signStr = `${1624619679}\n${key}`;
-  
-  const hash = CryptoJS.HmacSHA256("Message", signStr);
-  //   const sign = hash.toString(CryptoJS.enc.Base64);
-  const sign = CryptoJS.enc.Base64.stringify(hash);
-  console.log("hash", hash, signStr);
-  const data = {
-    timestamp: 1624619679 + "",
-    sign: sign,
-    msg_type: "text",
-    content: { text },
-  };
-  console.log("data", data);
-  request.post(url, data).then((res) => {
-    console.log("res:::", res);
-  });
-};
+const webhook =
+  "https://open.feishu.cn/open-apis/bot/v2/hook/xxxx";
+// const webhook = "http://localhost:3002/test";
+const secret = "xxxx";
+// 初始化机器人
+const bot = new Bot({
+  webhook: webhook,
+  secret: secret,
+});
+
 // 技术分享名单
 const techniqueSharingList = [
   "刘晓林",
@@ -127,7 +113,7 @@ function scheduleObjectLiteralSyntax() {
       try {
         const text = await getCurrentPerson("周五😂");
         console.log(text);
-        sendFs(text);
+        bot.text(text);
       } catch (error) {
         sendFs("啊，我出错了！");
       }
@@ -140,7 +126,7 @@ function scheduleObjectLiteralSyntax() {
     async () => {
       try {
         const text = await getCurrentPerson("周二🙂");
-        sendFs(text);
+        bot.text(text);
         addIndex();
       } catch (error) {
         sendFs("啊，我出错了！");
@@ -153,7 +139,14 @@ function scheduleObjectLiteralSyntax() {
 scheduleObjectLiteralSyntax();
 // getCurrentPerson("周五😂").then((text) => {
 //   console.log(text);
-//   sendFs(text);
+//   bot
+//     .text('别鸟我~')
+//     .then((res) => {
+//       console.log(res, "res");
+//     })
+//     .catch((err) => {
+//       console.log("err", err);
+//     });
 // });
 
 app.listen(port, () => {
