@@ -4,7 +4,7 @@ const sign = require("./sign");
 /**
  * 飞书机器人 WebHook：用于支持飞书机器人消息发送
  *
- * 官方文档：https://www.feishu.cn/hc/en-us/articles/360024984973-Use-Bots-in-group-chat
+ * 官方文档：https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN
  */
 class ChatBot {
   /**
@@ -117,7 +117,8 @@ class ChatBot {
   /**
    * 发送消息卡片
    *
-   * @param {Object} card
+   * 参考数据格式 https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#4996824a
+   * @param {Object} card 
    * @return {Promise}
    */
   interactive(card) {
