@@ -1,4 +1,3 @@
-const request = require("./request.js");
 const sign = require("./sign");
 
 /**
@@ -12,6 +11,7 @@ class ChatBot {
    *
    * @param {String} options.webhook 完整的接口地址
    * @param {String} options.secret secret
+   * @param {String} options.request 请求库
    */
   constructor(options) {
     options = options || {};
@@ -22,6 +22,7 @@ class ChatBot {
     // 次之将由 options.baseUrl 和 options.accessToken 组合成一个 webhook 地址
     this.webhook = options.webhook;
     this.secret = options.secret;
+    this.request = options.request;
   }
 
   /**
@@ -38,7 +39,7 @@ class ChatBot {
       signData = { timestamp: timestamp, sign: sign(this.secret, timestamp) };
     }
     return new Promise((resolve, reject) => {
-      request
+      this.request
         .post(this.webhook, {
           ...signData,
           ...msg,
@@ -118,7 +119,7 @@ class ChatBot {
    * 发送消息卡片
    *
    * 参考数据格式 https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#4996824a
-   * @param {Object} card 
+   * @param {Object} card
    * @return {Promise}
    */
   interactive(card) {
